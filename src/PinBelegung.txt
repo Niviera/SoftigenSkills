@@ -1,0 +1,17 @@
+Display:
+SDA: D1 = 4
+SCL: D2 = 5
+VCC: 5V
+Ground: Ground
+
+Temperatursensor:
+VCC: 3.3V
+Ground: Ground
+DQ: A0 = 0
+
+RGB-LED:
+VCC: 5V
+kath: Ground
+Red: D7 = 13
+Green: D6 = 12
+Blue: D5 = 14
