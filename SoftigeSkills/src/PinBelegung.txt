@@ -15,3 +15,8 @@ kath: Ground
 Red: D7 = 13
 Green: D6 = 12
 Blue: D5 = 14
+
+LED_Strip
+VCC: 5V
+Ground: Ground
+data: A8 = 15

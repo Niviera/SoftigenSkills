@@ -4,12 +4,46 @@
 #include <WiFiUdp.h>
 #include <NTPClient.h>
 
+
 //Funktionen
 void Network::setUPWiFi(){
     Connection.autoConnect(psetupName);
 }
 
+bool Network::connectToWifi(){
+    /*
+        Stellt die Verbindung zum Wlan mit dem, integrierten Wlan modul, her.
+        Sollte es nicht innerhalb der Zeit X klappen wird es als fehlgeschlagen angesehen und ein false returned,
+        ansonsten true.
+    */
+    Serial.println("Versuche mit "+ String(WIFI_NETWORK) + " zu Verbinden");
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD);
+
+    unsigned int startMessure = millis();
+
+    while (WiFi.status() != WL_CONNECTED && millis() - startMessure < timeoutMS )
+    {
+        Serial.print(".");
+        delay(100);
+    }
+
+    if(WiFi.status() != WL_CONNECTED){
+        Serial.printf("\nVerbindung fehlgeschlagen.");
+        return false;
+
+    }else{
+        Serial.printf("\nVerbindung erfolgreich.");
+        return true;
+    }
+}
+
+void Network::disconnectFromWifi(){
+    WiFi.disconnect();
+}
+
 std::string Network::getCurrentTime(int *pminutes, int *phours){
+    
     /* Messages for debugging */
     Serial.println("Connect to 'pool.ntp.org' to get the Time");
     std::string days[] = {"Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", };
@@ -30,13 +64,13 @@ std::string Network::getCurrentTime(int *pminutes, int *phours){
     return days[day];
 }
 
-float Network::getCurrentWeatherConditions(std::string *pweatherForecast, std::string *pweatherDescription){
+float Network::getCurrentWeatherConditions(std::string *pweatherForecast, std::string *pweatherDescription, int *weatherid){
     /* Messages for debugging */
     Serial.print("connecting to "); 
     Serial.println("api.openweathermap.org");
 
 if (Client.connect("api.openweathermap.org", 80)) {
-    Client.println("GET /data/2.5/weather?q=" + city + ",DE&units=metric&lang=de&APPID=" + papi_Key);
+    Client.println("GET /data/2.5/weather?q=" + city + ",DE&units=metric&lang=en&APPID=" + papi_Key);
     Client.println("Host: api.openweathermap.org");
     Client.println("Connection: close");
     Client.println();
@@ -59,32 +93,45 @@ if (Client.connect("api.openweathermap.org", 80)) {
   while(temp[index] != ' ' && temp[index] != '\0'){
     index++;
   }
-  temp[0] += 0x20;
   temp[index] = '\0';
   *(pweatherDescription) = temp;
 
   /* Auserten  der weather id */
   int weatherID = doc["weather"][0]["id"];
-  switch ((weatherID/100)) {                                                
+  switch ((weatherID/100)) {  
+    case 2:
+        *(pweatherForecast) = "Thunder";
+        *(weatherid) = 2;                                              
     case 3: 
-        *(pweatherForecast) = "Nieselreg."; 
+        *(pweatherForecast) = "Drizzle";//"Nieselreg."; 
+        *(weatherid) = 3;
         break;
     case 5: 
-        *(pweatherForecast) = "Regen"; 
+        *(pweatherForecast) = "Rain";//"Regen"; 
+        *(weatherid) = 5;
         break;
     case 6: 
-        *(pweatherForecast) = "Schnee"; 
+        *(pweatherForecast) = "Snow";//"Schnee"; 
+        *(weatherid) = 6;
         break;
     case 7: 
-        *(pweatherForecast) = "Nebel"; 
+        *(pweatherForecast) = "Fog";//"Nebel"; 
+        *(weatherid) = 7;
         break;
     case 8: 
-        *(pweatherForecast) = "Wolken"; 
+        *(pweatherForecast) = "Clouds";//"Wolken"; 
+        *(weatherid) = 8;
         break;
     default: 
-        *(pweatherForecast) = "Unbekannt"; 
+        *(pweatherForecast) = "Unknown";//"Unbekannt"; 
+        *(weatherid) = 800;
         break;                              
-  } if (weatherID == 800) *(pweatherForecast) = "  klar"; 
+  } 
+  if (weatherID == 800){
+        *(weatherid) = 800;
+        *(pweatherForecast) = "Clear";//"Klar"; 
+  } 
+  
   
   return (float)doc["main"]["temp"];
 }

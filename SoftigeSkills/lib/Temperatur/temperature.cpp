@@ -5,13 +5,13 @@
 /* Funtions */
 float Temperature::readTemperature(){
     /* 
-        Read the current on Pin0 an calculates the tempeture of it.
-        Calculation is taken from a old Project and is made for the 
-        Temp Sensor TMP36
+        TODO: Fix temp Curve
     */
     int sensorValue = analogRead(this->tempPin);
-    float voltage = (sensorValue/1025) * 5.0;
-    return (voltage - .5) * 100;
+    float voltage = (float)sensorValue * 2.8;
+    voltage /= 1024.0;
+    float temp = (voltage - .5) * 100;
+    return temp;
 }
 
 /* Konstruktor & Destructor */

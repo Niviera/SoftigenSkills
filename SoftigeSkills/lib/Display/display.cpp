@@ -15,7 +15,6 @@ int Display::displayXCoordinate(int textLength){
 }
 
 void Display::printTempeture(float *ptemperatur, std::string upupperRow){
-    Serial.printf("\nPrint Temperatur");
     /* Prepare Output: */
     int lengthUpperRow = 0;
     char *prow1 = (char *)malloc(sizeof(char)*(MAXCHARPERROW));

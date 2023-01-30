@@ -1,17 +1,22 @@
 #include "led.h"
 #include <Arduino.h>
+#include <FastLED.h>
 
 // konstruktor & destructor
 Led::Led(/* args */)
 {
 }
 
-Led::Led(int green, int blue, int red){
+Led::Led(int green, int blue, int red, int numLeds){
     redPin = red;
     bluePin = blue;
     greenPin = green;
-}
 
+    NUM_LEDS = numLeds;
+
+
+
+}
 Led::~Led()
 {
 }
@@ -128,26 +133,4 @@ int Led::blue(float *ptemperatur){
 }
 
 /* Wettereffekte */
-void Led::effect_thunder() {
 
-}
-
-void Led::effect_drizzle() {
-
-}
-
-void Led::effect_rain() {
-
-}
-
-void Led::effect_snow() {
-
-}
-
-void Led::effect_fog() {
-
-}
-
-void LED_effect_cloudy() {
-
-}
