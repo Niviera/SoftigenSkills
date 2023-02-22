@@ -45,7 +45,6 @@ void Network::disconnectFromWifi(){
 std::string Network::getCurrentTime(int *pminutes, int *phours){
     
     /* Messages for debugging */
-    Serial.println("Connect to 'pool.ntp.org' to get the Time");
     std::string days[] = {"Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", };
     /* 
         get Time
@@ -66,16 +65,13 @@ std::string Network::getCurrentTime(int *pminutes, int *phours){
 
 float Network::getCurrentWeatherConditions(std::string *pweatherForecast, std::string *pweatherDescription, int *weatherid){
     /* Messages for debugging */
-    Serial.print("connecting to "); 
-    Serial.println("api.openweathermap.org");
-
 if (Client.connect("api.openweathermap.org", 80)) {
-    Client.println("GET /data/2.5/weather?q=" + city + ",DE&units=metric&lang=en&APPID=" + papi_Key);
-    Client.println("Host: api.openweathermap.org");
-    Client.println("Connection: close");
-    Client.println();
+    //Client.println("GET /data/2.5/weather?q=" + city + ",DE&units=metric&lang=en&APPID=" + papi_Key);
+    //Client.println("Host: api.openweathermap.org");
+    //Client.println("Connection: close");
+    //Client.println();
 } else {
-    Serial.println("connection failed");
+    //Serial.println("connection failed");
     *(pweatherForecast) = "FetchFail";
     return -99.99;
 }
@@ -140,6 +136,8 @@ if (Client.connect("api.openweathermap.org", 80)) {
 Network::Network(/* args */)
 {
 }
+
+
 
 Network::Network(String city){
     this->city = city;

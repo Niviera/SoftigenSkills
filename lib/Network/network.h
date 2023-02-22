@@ -9,10 +9,10 @@ private:
     WiFiClient Client;
 
     const char *psetupName = "ESP8266_Lucas";
-    const char *papi_Key = "XXXX";
+    const char *papi_Key = "d130e80c75f31c607e96dcad97f70618";
 
-    const char *WIFI_NETWORK = "XXXX";
-    const char *WIFI_PASSWORD = "XXXXX";
+    const char *WIFI_NETWORK = "Homesurfing";
+    const char *WIFI_PASSWORD = "WRFGJLM6zf7AjrWkoeXfaWwdKYuYuWaR";
     const unsigned int timeoutMS = 20000;
 
     String city = "Oldenburg";

@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 
+
 // konstruktor & destructor
 Led::Led(/* args */)
 {

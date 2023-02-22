@@ -5,6 +5,7 @@
 #include "display.h"
 #include "network.h"
 #include "led.h"
+#include "globalDefine.h"
 
 #define STADT "Oldenburg"
 #define MAXSTATUSINFORMATIONS 4
@@ -17,8 +18,6 @@
 #define NUM_LEDS    2   
 #define BRIGHTNESS  70
 #define LED_TYPE    WS2811
-
-
 
 
 /* Globale Variablen */
@@ -77,7 +76,7 @@ void setup() {
 
   /* Verbinde mit potenzielles OLED pannel */
   if(!OledDisplay.connectDisplay()) {
-    Serial.println("Kein Display gefunden");
+    debugln("Kein Display gefunden");
   }
   
   /* Verbinde mit Wlan */
@@ -123,18 +122,18 @@ void loop() {
     {
     case 0:
       oledInfo++;
-      Serial.printf("\nStadt & Temperatur:");
+      debugln("Stadt & Temperatur:");
       OledDisplay.printTempeture(&temperatur, STADT);
       break;
     case 1:
       oledInfo++;
-      Serial.printf("\nUhr und Tag");
+      debugln("Uhr und Tag");
       calcTime();
       OledDisplay.printTime(&minutes,&hours,day);
       break;
     case 2:
     oledInfo++;
-    Serial.printf("\nRaumtemp");
+    debugln("Raumtemp");
     roomtemp = Temperatur.readTemperature();
     OledDisplay.printTempeture(&roomtemp, "Roomtemp.:");
     analogWrite(LED_BLUE_PIN, Light.blue(&roomtemp));
@@ -143,7 +142,7 @@ void loop() {
     break;
     case 3:
       oledInfo++;
-      Serial.printf("\nWetter:");
+      debugln("Wetter:");
       OledDisplay.printWeather(weatherCondition, weatherDiscription);
       
       oledInfo = oledInfo % MAXSTATUSINFORMATIONS;         
@@ -154,7 +153,6 @@ void loop() {
     weatherid = Serial.parseInt();    // vorsicht es werden negative Zahlen nicht berücksichtig!
     newFunction = true;
     String resett = Serial.readString(); // einfacher schlichter resett um alles auzlusen und zu verwerfen.
-    Serial.printf("\nAngebenene WetterID: %d", weatherid);
   }
 
   /* Auswertung welche LED-Funktion ausgeführt wird */
@@ -192,13 +190,11 @@ void loop() {
 
 void calcTime(){
   /* Uhrzeit ist nicht perfekt diese wird immer hinter her hängen!*/
-  Serial.printf("\nold time: %02d:%02d", hours, minutes);
   minutes += ((millis() - lastTimeCheck)/60000);
   if(minutes >= 60){ 
     minutes = minutes % 60;
     hours++;
   }
-  Serial.printf("\nnew time: %02d:%02d", hours, minutes);
   hours = hours % 24;
   if(hours == 0 && newDay){
     Connection.connectToWifi();
@@ -253,7 +249,7 @@ void effect_thunder() {
 }
 
 void effect_rain(){
-  Serial.printf("\nLicht effect_rain");
+  debugln("Licht effect_rain");
   int active = 0;
   int rain = 50;
   for(int i = 0; i < 5; i++){
